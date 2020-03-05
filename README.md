@@ -1,6 +1,9 @@
 # Prography-6th-deep-LeeChungHyun
 TF2.0 keras 모델 클래스를 이용해 구현했다.
 
+### Dataset
+tf.keras.datasets.mnist
+
 ### train.py
 
 ```
