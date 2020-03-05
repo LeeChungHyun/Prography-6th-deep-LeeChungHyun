@@ -10,21 +10,23 @@ def preprocess(train_images):
     mnist = tf.keras.datasets.mnist
     #학습에 사용될 부분과 테스트에 사용될 부분
     (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
+   
+    #class_names = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+
     #mnist_데이터는 0-255이므로 데이터를 0-1사이의 값을 만들기 위해 255로 나눈다.
-    train_images = train_images.reshape(60000, 784).astype('float32') / 255.0
-    test_images = test_images.reshape(10000, 784).astype('float32') / 255.0
+    train_images = train_images.reshape(60000, 28, 28, 1).astype('float32') / 255.0
+    test_images = test_images.reshape( 10000, 28, 28, 1).astype('float32') / 255.0
+    
     #정규화 과정
-     
     train_labels = np_utils.to_categorical(train_labels, 10, dtype='float32')
     test_labels = np_utils.to_categorical(test_labels, 10, dtype='float32')
     
     # Grayscale인 데이터를 RGB로 변환한다.
-    train_images = np.stack((train_images) * 3, axis=-1)
-    test_images = np.stack((test_images) * 3, axis=-1)
+    train_images = np.stack((train_images) * 3 , axis=-1)
+    test_images = np.stack((test_images) * 3 , axis=-1)
     return train_images
-    #, train_labels, test_images, test_labels
     
-#Model Initialization
+#Model Initialization, 모델 클래스의 상속
 class vgg_16(Model):
     def __init__(self):  # __init__()는 tf.keras.layers에서 환경변수 저장
         super(vgg_16, self).__init__()
@@ -72,7 +74,9 @@ class vgg_16(Model):
         #shortcut connection은 layer의 입력을 layer의 출력에 바로 연결시키는 기법이다.
         #그니까 layer통해 나온 결과와 그 전의 결과를 더한다.
 
-    def shortcut_connection(self, inputs):
+    # 정방향 패스를 정의한다.
+    # `__init__` 메서드에서 정의한 층을 사용한다.
+    def call(self, inputs):
         x = self.Conv1_1(inputs)
         x = self.Conv1_2(x)
         x = self.max_pool_1(x)
@@ -122,15 +126,15 @@ if __name__ == "__main__":
     batch_size = 64
 
     #모델을 학습시킨다.
-    history = model.fit(train_images, train_labels, epochs=epochs)
+    hist = model.fit(train_images, train_labels, epochs=epochs, batch_size=batch_size)
     
     #학습된 weight 저장한다.
-    model.save_weights('./checkpoints', save_format='tf')
+    model.save_weights('./weights/prography', save_format='tf')
 
     #학습과정을  살펴본다.
     print('## Training Accuracy ##')
-    print(history.history['Acc'])
-  
+    print(hist.history['Acc'])
+    
     #모델을 평가한다.
     loss_and_metrics = model.evaluate(test_images, test_labels, batch_size=batch_size)
     print('## Evaluation loss and_metrics ##')
