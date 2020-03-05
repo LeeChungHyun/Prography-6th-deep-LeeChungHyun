@@ -37,9 +37,7 @@ if __name__ == "__main__":
     
     #모델을 평가해보자.
     test_images = preprocess(test_images)
-    predictions = model.predict(test_images)
-    pred_onehot = [tf.math.argmax(predictions[i]).numpy()
-                   for i in range(len(test_images))]
-    accuracy = sum([1 for i in range(len(test_images))
-                    if pred_onehot[i] == test_labels[i]]) / len(test_labels)
-    print(f'Acc is: {accuracy*100}%')
+    prediction = model.predict(test_images)
+    pred_onehot = [tf.math.argmax(prediction[i]).numpy() for i in range(len(test_images))]
+    acc = sum([1 for i in range(len(test_images)) if pred_onehot[i] == test_labels[i]]) / len(test_labels)
+    print(f'Acc is: {acc*100}%')
