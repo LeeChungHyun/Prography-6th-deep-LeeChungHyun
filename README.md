@@ -1,5 +1,5 @@
 # Prography-6th-deep-LeeChungHyun
-TF2.0 keras 모델 클래스를 이용해 구현했다.
+TF2.0 keras 모델 클래스를 이용해 구현했습니다.
 
 ## Dataset
 tf.keras.datasets.mnist
@@ -7,6 +7,8 @@ tf.keras.datasets.mnist
 ## train.py
 
 ```
+preprocess()
+
 class vgg_16(Model)
 - __init__(self)
 - call(self, inputs)
@@ -14,12 +16,15 @@ class vgg_16(Model)
 - model.fit()
 - model.save_weights()
 ```
+preprocess 과정에서 mnist 데이터를 RGB채널로 변경했습니다.
+VGG_16 구조에서 Skip/Shortcut connection 구조를 통해 Conv2_1의 입력을 첫번째 Dense 입력에 추가했습니다. 
 
 ## test.py
 
 ```
+preprocess()
 model.load_weights()
-predict()
+model.predict()
 ```
 
 ## Weight
