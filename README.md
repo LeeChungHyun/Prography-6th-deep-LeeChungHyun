@@ -5,6 +5,9 @@ TF2.0 keras 모델 클래스를 이용해 구현했습니다.
 tf.keras.datasets.mnist
 
 ## train.py
+```
+$ python train.py
+```
 
 ```
 preprocess()
@@ -20,7 +23,9 @@ preprocess 과정에서 mnist 데이터를 RGB채널로 변경했습니다.
 VGG_16 구조에서 Skip/Shortcut connection 구조를 통해 Conv2_1의 입력을 첫번째 Dense 입력에 추가했습니다. 
 
 ## test.py
-
+```
+$ python test.py
+```
 ```
 preprocess()
 model.load_weights()
