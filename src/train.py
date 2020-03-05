@@ -14,16 +14,17 @@ def preprocess(train_images):
     #class_names = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
     #mnist_데이터는 0-255이므로 데이터를 0-1사이의 값을 만들기 위해 255로 나눈다.
-    train_images = train_images.reshape(60000, 28, 28, 1).astype('float32') / 255.0
-    test_images = test_images.reshape( 10000, 28, 28, 1).astype('float32') / 255.0
+    train_images = train_images / 255.0
+    test_images = test_images / 255.0
     
     #정규화 과정
     train_labels = np_utils.to_categorical(train_labels, 10, dtype='float32')
     test_labels = np_utils.to_categorical(test_labels, 10, dtype='float32')
     
     # Grayscale인 데이터를 RGB로 변환한다.
-    train_images = np.stack((train_images) * 3 , axis=-1)
-    test_images = np.stack((test_images) * 3 , axis=-1)
+    train_images = np.stack(
+        (train_images, train_images, train_images), axis=-1)
+    test_images = np.stack((test_images, test_images, test_images,), axis=-1)
     return train_images
     
 #Model Initialization, 모델 클래스의 상속
@@ -120,10 +121,12 @@ if __name__ == "__main__":
     train_images = preprocess(train_images)
    
     #모델의 학습과정을 설정한다.
-    model.compile(optimizer='adam', loss='categorical_crossentropy',
+    model.compile(optimizer='adam', loss='sparse_categorical_crossentropy',
                   metrics=['accuracy'])
     epochs = 5
     batch_size = 64
+
+    print(np.shape(train_images))
 
     #모델을 학습시킨다.
     hist = model.fit(train_images, train_labels, epochs=epochs, batch_size=batch_size)
@@ -133,12 +136,8 @@ if __name__ == "__main__":
 
     #학습과정을  살펴본다.
     print('## Training Accuracy ##')
-    print(hist.history['Acc'])
-    
-    #모델을 평가한다.
-    loss_and_metrics = model.evaluate(test_images, test_labels, batch_size=batch_size)
-    print('## Evaluation loss and_metrics ##')
-    print(loss_and_metrics)
+    print(hist.history['loss'])
+    print(hist.history['acc'])
 
 
  
